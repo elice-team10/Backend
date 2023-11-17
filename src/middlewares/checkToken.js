@@ -1,19 +1,29 @@
 import jwt from "jsonwebtoken";
+import { errGenerator } from "../../errGenerator.js";
+import { User } from "../db/models/usermodel.js";
+import mongoose from "mongoose";
+import asyncHandler from "express-async-handler"
 
-export const checkToken = (req,res,next)=>{ //헤더에 저장된 토큰의 유무를 체크하고 복호화하여 userId 반환
-    const isToken = req.headers.authorization;
+const ObjectId = mongoose.Types.ObjectId;
+//헤더에 저장된 토큰의 유무를 체크하고 복호화하여 userId 반환
+export const checkToken = asyncHandler(async (req,res,next)=>{ 
 
-    if(!isToken){
-       return res.status(404).send("로그인 해주세요");
-    }
+        const isToken = req.headers.authorization;
 
-    const data = jwt.verify(isToken.substr(7),process.env.jwt_key)
-    /*
-        1. data.status 값을 확인하여 admin(0)이면 통과
-        2. req.params.userId 값과 비교하여 같으면 통과
-        3. 둘다 아니면 회원정보가 일치 않다는 에러처리
-    */
-    req.params.userId=data.userId;
-    req.params.status=data.status;
-    next();
-}
+        if(!isToken){
+            throw errGenerator("로그인 해주세요",404,{});
+        }
+
+        const tokenData = jwt.verify(isToken.substr(7),process.env.jwt_key)
+        
+        const userData = await User.findById(new ObjectId(tokenData.userId));
+        
+        if(!userData){
+            throw errGenerator("잘못된 인증입니다.",404,{});
+        }
+
+        req.user = userData;
+            
+        next();
+
+}) 

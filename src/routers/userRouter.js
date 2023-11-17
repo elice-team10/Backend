@@ -1,86 +1,60 @@
 import { Router } from "express";
-import { userService } from "../services/userService.js";
+import { userModel } from "../db/models/usermodel.js";
 import { checkToken } from "../middlewares/checkToken.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
+import asyncHandler from "express-async-handler"
 
 const userRouter = Router();
 
 //전체 유저검색(관리자용)
-userRouter.get('/', async (req,res,next)=>{
-    try{
+userRouter.get('/', asyncHandler(async (req,res,next)=>{
         const {page,pageSize}=req.query;
-        const userData = await userService.getUsers(page,pageSize);
+        const userData = await userModel.getUsers(page,pageSize);
         res.status(200).send(userData);
-    }catch(err){
-        next(err);
-    }
-})
+}))
 
 //특정 유저검색
-userRouter.get('/detail',checkToken,async (req,res,next)=>{
-    try{
-        const userId = req.params.userId;
-        const userData = await userService.getUser(userId);
+userRouter.get('/detail',checkToken,asyncHandler(async (req,res,next)=>{
+        const userData = req.user;
         res.status(200).send(userData);
-    }catch(err){
-        next(err);
-    }
-})
+}))
 
 //로그인
-userRouter.post('/login', async (req,res,next)=>{
-    try{
+userRouter.post('/login', asyncHandler(async (req,res,next)=>{
+
         const {email,password}=req.body
-        const token=await userService.loginUser(email,password)
-        res.status(200).json(token);
-    }catch(err){
-        next(err);
-    }
-})
+        const token=await userModel.loginUser(email,password)
+        res.status(200).json({token});
+}))
 
 //회원가입
-userRouter.post('/join', async (req,res,next)=>{
-    try{
+userRouter.post('/join', asyncHandler(async (req,res,next)=>{
+
         const {email,nickname,password}=req.body
-        await userService.joinUser(email,nickname,password)
+        await userModel.joinUser(email,nickname,password)
         res.status(201).send("success")
-    }catch(err){
-        next(err);
-    }
-})
+}))
 
 //회원정보수정
-userRouter.put('/',checkToken,async (req,res,next)=>{
-    try{
-        const userId = req.params.userId;
+userRouter.put('/',checkToken,asyncHandler(async (req,res,next)=>{
+        const userData = req.user
         const {email,nickname,password}=req.body
-        await userService.modifyUser(userId,email,nickname,password)
+        await userModel.updateUser(userData,email,nickname,password)
         res.status(201).send("success")
-    }catch(err){
-        next(err);
-    }
-})
+}))
 
 //유저탈퇴
-userRouter.delete('/',checkToken,async (req,res,next)=>{
-    try{
-        const userId = req.params.userId;
-        await userService.delUser(userId);
+userRouter.delete('/',checkToken, asyncHandler( async (req,res,next)=>{
+        const userData = req.user;
+        await userModel.delUser(userData);
         res.status(204).send();
-    }catch(err){
-        next(err);
-    }
-})
+}))
 
 //회원강제탈퇴(관리자용)
-userRouter.delete('/:userId',checkToken,isAdmin,async (req,res,next)=>{
-    try{
+userRouter.delete('/:userId',checkToken,isAdmin,asyncHandler(async (req,res,next)=>{
         const userId = req.params.userId;
-        await userService.delUser(userId);
+        await userModel.delAdminUser(userId);
         res.status(204).send();
-    }catch(err){
-        next(err);
-    }
-})
+}))
 
 export {userRouter};

@@ -63,7 +63,7 @@ commentRouter.post('/', async (req, res, next) => {
 
 
 //댓글 수정하기
-commentRouter.put('/', async (req, res, next) => {
+commentRouter.put('/:commentId', async (req, res, next) => {
     try {
         const comment = {
             nickname : req.body.nickname,
