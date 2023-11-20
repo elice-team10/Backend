@@ -1,4 +1,4 @@
-import { User } from "../db/models/usermodel.js";
+import { User } from "../db/models/userModel.js";
 import asyncHandler from "express-async-handler"
 import { errGenerator } from "../../errGenerator.js";
 import bcrypt from "bcrypt";
