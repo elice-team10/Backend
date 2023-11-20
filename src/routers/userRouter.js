@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { userModel } from "../db/models/usermodel.js";
+import { userModel } from "../db/models/userModel.js";
 import { checkToken } from "../middlewares/checkToken.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
 import asyncHandler from "express-async-handler"

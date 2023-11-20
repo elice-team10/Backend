@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { errGenerator } from "../../errGenerator.js";
-import { User } from "../db/models/usermodel.js";
+import { User } from "../db/models/userModel.js";
 import mongoose from "mongoose";
 import asyncHandler from "express-async-handler"
 
