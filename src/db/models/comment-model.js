@@ -23,17 +23,17 @@ class CommentModel{
 
     /* 코멘트 변경
     코멘트 id, 업데이트할 내용(콘텐트)*/
-    async updateComment({nickname, updateContent, postId}){
+    async updateComment({content, commentId}){
         const updatedComment
-         = await Comment.findOneAndUpdate({postId : postId},{nickname : nickname, content : updateContent})
+         = await Comment.findOneAndUpdate({commentId : commentId},{content : content})
 
         return updatedComment;
     }
 
     /* 코멘트 보기 (마이페이지)
     사용자 닉네임*/
-    async findMyComment(nickname){
-        const findedMyComment = await Comment.find({nickname : nickname})
+    async findMyComment(data){
+        const findedMyComment = await Comment.find({nickname : data})
 
         return findedMyComment;
     }
@@ -49,6 +49,7 @@ class CommentModel{
     /* 글에서 코멘트 보기
     게시글id */
     async findPostComment(data){
+        console.log(data)
         const findedPostComment = await Comment.find({postId : data})
 
         return findedPostComment;

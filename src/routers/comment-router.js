@@ -10,18 +10,19 @@ import { isAdmin } from "../middlewares/isAdmin.js";
 commentRouter.get('/:nickname',  asyncHandler(async (req, res, next) => {  // checkToken,
     const findedComment
         = await commentModel.findMyComment(req.params.nickname)
-
+    console.log('asd')
     res.status(200).send(findedComment);
 }))
 
 
 //게시글 - 댓글 가져오기
-commentRouter.get('/:postId', asyncHandler(async (req, res, next) => {
+commentRouter.get('/post/:postId', asyncHandler(async (req, res, next) => {
 
-    const findedPostComment
-        = await commentModel.findPostComment(req.body.postId)
+    console.log(req.params.postId)
+    const findedComment
+        = await commentModel.findPostComment(req.params.postId)
 
-    res.status(200).send(findedPostComment);
+    res.status(200).send(findedComment);
 }))
 
 
@@ -54,9 +55,8 @@ commentRouter.post('/:postId', asyncHandler(async (req, res, next) => { // check
 commentRouter.put('/:commentId',  asyncHandler(async (req, res, next) => {//checkToken,
 
     const comment = {
-        nickname: req.body.nickname,
-        updateContent: req.body.content,
-        postId: req.body.postId,
+        content: req.body.content,
+        commentId: req.body.commentId,
     }
     const changedComment
         = await commentModel.updateComment(comment)
