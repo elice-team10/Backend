@@ -1,13 +1,14 @@
-import { errGenerator } from "../../../errGenerator";
-import { PostSchema } from "../schemas/postSchema";
+import { PostSchema } from "../schemas/postSchema.js";
+import { errGenerator } from "../../../errGenerator.js";
 import mongoose from "mongoose";
-import { errGenerator } from "../../../errGenerator";
 
-const Post = mongoose.model("Post",PostSchema);
+const Post = mongoose.model("post",PostSchema);
+const ObjectId = mongoose.Types.ObjectId;
 
 class PostModel{
     /* 새 게시글 생성 */
     async createPost(postInfo){
+        
         const createdPost = await Post.create(postInfo)
         
         return createdPost;
@@ -15,19 +16,19 @@ class PostModel{
 
     /* 게시글 삭제
     게시글 id*/
-    async removePost(postId){
-        const removedPost = await Post.delete({shortId : postId})
+    async removePost(data){
+        const removedPost = await Post.findByIdAndDelete(new ObjectId(data))
         // mongoDB에서 id를 어떤 이름으로 지정하는지 확인
 
-        return { result : deleted };
+        return { result : "deleted" };
     }
 
     /* 게시글 변경
      업데이트할 게시글 내용, object화 id*/
-    async updatePost(post){
-    
+    async updatePost(postId,data){
+     
         const updatedPost
-         = await Comment.findOneAndUpdate({shortId},post)
+         = await Post.findByIdAndUpdate(new ObjectId(postId),data)
 
         return updatedPost;
     }
@@ -48,8 +49,9 @@ class PostModel{
     }
 
     /* 게시글 보기 (id)*/
-    async findPost(){
-        const findedAllPost = await Post.findOne({shortId})
+    async findPost(data){
+        
+        const findedAllPost = await Post.findById(new ObjectId(data))
 
         return findedAllPost;
     }
@@ -58,5 +60,3 @@ class PostModel{
 
 const postModel = new PostModel();
 export {postModel};
-
-
