@@ -1,6 +1,6 @@
-
 import { PostSchema } from "../schemas/postSchema.js";
 import { errGenerator } from "../../../errGenerator";
+
 import mongoose from "mongoose";
 
 const Post = mongoose.model("post",PostSchema);
@@ -29,7 +29,7 @@ class PostModel{
     async updatePost(data){
      
         const updatedPost
-         = await Comment.findOneAndUpdate({postId:postId},post)
+         = await Comment.findOneAndUpdate({postId:data.postId},data)
 
         return updatedPost;
     }
