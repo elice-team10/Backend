@@ -4,6 +4,7 @@ import { checkToken } from "../middlewares/checkToken.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
 import asyncHandler from "express-async-handler"
 import { checkLogin } from "../middlewares/checkLogin.js";
+import { sameUser } from "../middlewares/sameUser.js";
 
 
 const userRouter = Router();
@@ -27,12 +28,12 @@ userRouter.post('/login',checkLogin,asyncHandler(async (req,res,next)=>{
         const {_id,status,nickname}=req.user;
         const token=await userModel.loginUser(_id)
         res.status(200)
-        .cookie("loginToken",token,{httpOnly:true,maxAge:1000*60*60*3})
+        .cookie("loginToken",token,{httpOnly:true,maxAge:1000*60*60*3,sameSite:'None',secure:false})
         .json({token,status,nickname});
 }))
 
 //회원가입
-userRouter.post('/join', asyncHandler(async (req,res,next)=>{
+userRouter.post('/join',sameUser ,asyncHandler(async (req,res,next)=>{
 
         const {email,nickname,password}=req.body
         await userModel.joinUser(email,nickname,password)
