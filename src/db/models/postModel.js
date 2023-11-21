@@ -1,5 +1,5 @@
 import { PostSchema } from "../schemas/postSchema.js";
-import { errGenerator } from "../../../errGenerator";
+import { errGenerator } from "../../../errGenerator.js";
 
 import mongoose from "mongoose";
 

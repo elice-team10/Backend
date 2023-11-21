@@ -19,12 +19,9 @@
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.0",
-<<<<<<< HEAD
-    "nanoid": "^5.0.3"
-=======
+    "nanoid": "^5.0.3",
     "multer": "^1.4.5-lts.1",
     "react-cookie": "^6.1.1"
->>>>>>> 43009cbdd4c2b505a69410ce1876efb3d9a93067
   },
   "type": "module",
   "devDependencies": {
