@@ -10,7 +10,7 @@ import { isAdmin } from "../middlewares/isAdmin.js";
 commentRouter.get('/:nickname',  asyncHandler(async (req, res, next) => {  // checkToken,
     const findedComment
         = await commentModel.findMyComment(req.params.nickname)
-    console.log('asd')
+
     res.status(200).send(findedComment);
 }))
 
@@ -18,7 +18,6 @@ commentRouter.get('/:nickname',  asyncHandler(async (req, res, next) => {  // ch
 //게시글 - 댓글 가져오기
 commentRouter.get('/post/:postId', asyncHandler(async (req, res, next) => {
 
-    console.log(req.params.postId)
     const findedComment
         = await commentModel.findPostComment(req.params.postId)
 
@@ -27,7 +26,7 @@ commentRouter.get('/post/:postId', asyncHandler(async (req, res, next) => {
 
 
 //관리자페이지 - 전체 댓글 보기
-commentRouter.get('/',  asyncHandler(async (req, res, next) => {   //isAdmin,
+commentRouter.get('/', asyncHandler(async (req, res, next) => {   //isAdmin,
 
     const findedAllComment
         = await commentModel.findAllComment()
@@ -41,9 +40,9 @@ commentRouter.post('/:postId', asyncHandler(async (req, res, next) => { // check
     const newComment = {
         nickname: req.body.nickname,
         content: req.body.content,
-        postId: req.body.postId,
+        postId: req.params.postId,
     }
-    console.log(req.body)
+
     const createdNewComment
         = await commentModel.createComment(newComment)
 
@@ -56,7 +55,7 @@ commentRouter.put('/:commentId',  asyncHandler(async (req, res, next) => {//chec
 
     const comment = {
         content: req.body.content,
-        commentId: req.body.commentId,
+        commentId: req.params.commentId,
     }
     const changedComment
         = await commentModel.updateComment(comment)
@@ -66,10 +65,10 @@ commentRouter.put('/:commentId',  asyncHandler(async (req, res, next) => {//chec
 
 
 // 게시글 - 댓글 삭제하기
-commentRouter.delete('/:commentId',  asyncHandler(async (req, res, next) => { //checkToken, isAdmin,
-    console.log(req.body)
+commentRouter.delete('/:commentId',  asyncHandler(async (req, res, next) => { //checkToken
+
     const deleted
-        = await commentModel.removeComment(req.body.commentId);
+        = await commentModel.removeComment(req.params.commentId);
 
     res.status(200).json(deleted);
 }))

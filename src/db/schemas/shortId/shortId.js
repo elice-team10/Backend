@@ -6,4 +6,5 @@ export const shortId = {
     return nanoid();
   },
   required: true,
+  index:true
 };

@@ -8,14 +8,14 @@ import { checkLogin } from "../middlewares/checkLogin.js";
 
 const userRouter = Router();
 
-//전체 유저검색(관리자용)
+//전체 유저확인(관리자용)
 userRouter.get('/', asyncHandler(async (req,res,next)=>{
         const {page,pageSize}=req.query;
         const userData = await userModel.getUsers(page,pageSize);
         res.status(200).send(userData);
 }))
 
-//특정 유저검색
+//특정 유저확인
 userRouter.get('/detail',checkToken,asyncHandler(async (req,res,next)=>{
         const userData = req.user;
         res.status(200).send(userData);
@@ -28,7 +28,7 @@ userRouter.post('/login',checkLogin,asyncHandler(async (req,res,next)=>{
         const token=await userModel.loginUser(userId)
         res.status(200)
         .cookie("loginToken",token,{httpOnly:true,maxAge:1000*60*60*3})
-        .send("success");
+        .json({token});
 }))
 
 //회원가입
@@ -51,14 +51,24 @@ userRouter.put('/',checkToken,asyncHandler(async (req,res,next)=>{
 userRouter.delete('/',checkToken, asyncHandler( async (req,res,next)=>{
         const userData = req.user;
         await userModel.delUser(userData);
-        res.status(204).send();
+        res.status(204).cookie("loginToken","",{httpOnly:true,maxAge:0}).send("success");
 }))
+
+//로그아웃
+userRouter.delete('/logout',checkToken,asyncHandler(async (req,res,next)=>{
+        res.status(204)
+        .cookie("loginToken","",{httpOnly:true,maxAge:0})
+        .send("success");
+}));
+
 
 //회원강제탈퇴(관리자용)
 userRouter.delete('/:userId',checkToken,isAdmin,asyncHandler(async (req,res,next)=>{
         const userId = req.params.userId;
         await userModel.delAdminUser(userId);
-        res.status(204).send();
+        res.status(204).send("success");
 }))
+
+
 
 export {userRouter};

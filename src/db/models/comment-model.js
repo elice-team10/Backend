@@ -2,6 +2,7 @@ import { CommentSchema } from "../schemas/comment-schema.js";
 import mongoose from "mongoose";
 
 const Comment = mongoose.model("comment",CommentSchema);
+const ObjectId = mongoose.Types.ObjectId;
 
 class CommentModel{
     /* 새 코멘트 생성
@@ -16,7 +17,7 @@ class CommentModel{
     코멘트 id*/
     async removeComment(data){
         const removedComment
-         = await Comment.findOneAndDelete({commentId : data})
+         = await Comment.findByIdAndDelete(new ObjectId(data));
 
         return { result : "deleted" };
     }
@@ -25,7 +26,7 @@ class CommentModel{
     코멘트 id, 업데이트할 내용(콘텐트)*/
     async updateComment({content, commentId}){
         const updatedComment
-         = await Comment.findOneAndUpdate({commentId : commentId},{content : content})
+         = await Comment.findByIdAndUpdate(new ObjectId(commentId),{content})
 
         return updatedComment;
     }
@@ -49,8 +50,8 @@ class CommentModel{
     /* 글에서 코멘트 보기
     게시글id */
     async findPostComment(data){
-        console.log(data)
-        const findedPostComment = await Comment.find({postId : data})
+    
+        const findedPostComment = await Comment.find({postId:data})
 
         return findedPostComment;
     }

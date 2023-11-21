@@ -17,7 +17,7 @@ export const checkToken = asyncHandler(async (req,res,next)=>{
         const userData = await User.findById(new ObjectId(tokenData.userId));
         
         if(!userData){
-            throw errGenerator("잘못된 인증입니다.",404,{});
+            throw errGenerator("다시 로그인 해주세요.",404,{});
         }
 
         req.user = userData;
