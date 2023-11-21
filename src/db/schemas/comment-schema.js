@@ -1,7 +1,8 @@
 import { Schema } from "mongoose";
+import {shortId} from "./shortId/shortId.js";
 
 const CommentSchema = new Schema(
-  {
+  { 
     nickname: {
       type: String,
       required: true,
@@ -13,6 +14,9 @@ const CommentSchema = new Schema(
     postId: {
       type: String,
       required: true,
+    },
+    commentId:{
+      ...shortId
     },
   },
   {

@@ -6,26 +6,26 @@ const Comment = mongoose.model("comment",CommentSchema);
 class CommentModel{
     /* 새 코멘트 생성
     { 사용자 닉네임, 내용(콘텐트), 게시글id } */
-    async createComment(commentInfo){
-        const createdComment = await Comment.create(commentInfo)
+    async createComment(newComment){
+        const createdComment = await Comment.create(newComment)
         
         return createdComment;
     }
 
     /* 코멘트 삭제
     코멘트 id*/
-    async removeComment(commentId){
-        const removedComment = await Comment.delete({shortId : commentId})
-        // mongoDB에서 id를 어떤 이름으로 지정하는지 확인
+    async removeComment(data){
+        const removedComment
+         = await Comment.findOneAndDelete({commentId : data})
 
-        return { result : deleted };
+        return { result : "deleted" };
     }
 
     /* 코멘트 변경
     코멘트 id, 업데이트할 내용(콘텐트)*/
     async updateComment({nickname, updateContent, postId}){
         const updatedComment
-         = await Comment.findOneAndUpdate({nickname : nickname, content : updateContent, postId : postId})
+         = await Comment.findOneAndUpdate({postId : postId},{nickname : nickname, content : updateContent})
 
         return updatedComment;
     }
@@ -48,8 +48,8 @@ class CommentModel{
 
     /* 글에서 코멘트 보기
     게시글id */
-    async findPostComment(postId){
-        const findedPostComment = await Comment.find({postId : postId})
+    async findPostComment(data){
+        const findedPostComment = await Comment.find({postId : data})
 
         return findedPostComment;
     }
