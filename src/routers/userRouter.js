@@ -24,11 +24,11 @@ userRouter.get('/detail',checkToken,asyncHandler(async (req,res,next)=>{
 //로그인
 userRouter.post('/login',checkLogin,asyncHandler(async (req,res,next)=>{
 
-        const userId=req.user._id;
-        const token=await userModel.loginUser(userId)
+        const {_id,status,nickname}=req.user;
+        const token=await userModel.loginUser(_id)
         res.status(200)
         .cookie("loginToken",token,{httpOnly:true,maxAge:1000*60*60*3})
-        .json({token});
+        .json({token,status,nickname});
 }))
 
 //회원가입
