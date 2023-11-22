@@ -55,9 +55,8 @@ postRouter.get('/', asyncHandler(async (req, res, next) => {
 //게시글 작성
 postRouter.post('/',upload.single('picture'),asyncHandler(async (req, res, next) => { //checkToken, 
     let newPost = req.body 
-    const picture=req.file.path
+    const picture="/storage/"+req.file.originalname
     newPost.picture=picture
-    console.log(newPost)
     const createdNewPost= await postModel.createPost(newPost)
 
     res.status(200).send(createdNewPost);

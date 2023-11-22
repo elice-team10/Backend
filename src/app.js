@@ -15,6 +15,9 @@ console.log(process.env.storagePath)
 
 const app = express();
 
+app.use("/storage",express.static(storagePath))
+
+
 app.use(cors({
     origin: ['http://localhost:4000','http://kdt-sw-6-team10.elicecoding.com'],
     credentials: true,
