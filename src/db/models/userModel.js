@@ -2,6 +2,7 @@ import { UserSchema } from "../schemas/userSchema.js";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { errGenerator } from "../../../errGenerator.js";
 
 export const User = mongoose.model("User",UserSchema);
 const ObjectId = mongoose.Types.ObjectId;
@@ -45,15 +46,23 @@ class UserModel{
         }
     }
 
-    async updateUser(userData,email,nickname,password){ //회원정보 수정
+    async updateUser(userData,email,nickname,password,newPassword){ //회원정보 수정
         
         try{
-            const hashedPassword = await bcrypt.hash(password, 5);
+            let hashedPassword =undefined;
+            let check=false;
+            if(password){
+                check = await bcrypt.compare(password,userData.password)
+                if(!check) throw errGenerator("비밀번호가 잘못되었습니다.",404,{});
+                else if(newPassword) hashedPassword = await bcrypt.hash(newPassword, 5);
+            }           
+            
             const newUser = {
                 email:email,
                 nickname:nickname,
                 password:hashedPassword,
             }
+
             await User.updateOne(userData,newUser);
             return;
         }catch(err){

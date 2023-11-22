@@ -4,11 +4,26 @@ import asyncHandler from 'express-async-handler'
 import { postModel } from '../db/models/postModel.js'
 import { checkToken } from "../middlewares/checkToken.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
-import { object } from "webidl-conversions";
+
+import multer from "multer";
+
+const storage = multer.diskStorage({
+  destination:function(req,file,cb){
+    cb(null,process.env.storagePath);
+  },
+  filename:function(req,file,cb){
+    const filename=
+      new Date().getTime().toString().slice(0,8)+"-"+file.originalname;
+    req.filename=filename;
+    cb(null,filename);
+  }
+});
+
+const upload = multer({storage})
 
 
 //마이페이지 - 게시글 가져오기
-postRouter.get('/:nickname',  asyncHandler(async (req, res, next) => {  //checkToken,
+postRouter.get('/:nickname',asyncHandler(async (req, res, next) => {  //checkToken,
     const findedPost
         = await postModel.findMyPost(req.params.nickname)
 
@@ -30,7 +45,6 @@ postRouter.get('/detail/:postId', asyncHandler(async (req, res, next) => {
 
 //전체 게시글 보기
 postRouter.get('/', asyncHandler(async (req, res, next) => {  
-
     const findedAllPost
         = await postModel.findAllPost()
 
@@ -39,17 +53,19 @@ postRouter.get('/', asyncHandler(async (req, res, next) => {
 
 
 //게시글 작성
-postRouter.post('/', asyncHandler(async (req, res, next) => { //checkToken, 
-    const newPost = req.body
-    const createdNewPost
-        = await postModel.createPost(newPost)
+postRouter.post('/',upload.single('picture'),asyncHandler(async (req, res, next) => { //checkToken, 
+    let newPost = req.body 
+    const picture=req.file.path
+    newPost.picture=picture
+    console.log(newPost)
+    const createdNewPost= await postModel.createPost(newPost)
 
     res.status(200).send(createdNewPost);
 }))
 
 
 //게시글 수정하기
-postRouter.put('/:postId', asyncHandler(async (req, res, next) => { //checkToken, 
+postRouter.put('/:postId',asyncHandler(async (req, res, next) => { //checkToken, sameUser
 
     const post = req.body;
     const postId=req.params.postId
@@ -61,7 +77,7 @@ postRouter.put('/:postId', asyncHandler(async (req, res, next) => { //checkToken
 
 
 // 게시글 삭제하기
-postRouter.delete('/:postId', asyncHandler(async (req, res, next) => { //checkToken, isAdmin, 
+postRouter.delete('/:postId',asyncHandler(async (req, res, next) => { //checkToken ,sameUser
     const deleted
         = await postModel.removePost(req.params.postId);
 

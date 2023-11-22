@@ -19,7 +19,6 @@ const PostSchema = new Schema(
         },
         nickname:{
             type:String,
-            required: true
         },
         title:{
             type:String,
