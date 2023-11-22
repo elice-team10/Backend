@@ -4,13 +4,13 @@ import { checkToken } from "../middlewares/checkToken.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
 import asyncHandler from "express-async-handler"
 import { checkLogin } from "../middlewares/checkLogin.js";
-import { sameUser } from "../middlewares/sameUser.js";
+import { duplicateCheckUser } from "../middlewares/duplicateCheckUser.js";
 
 
 const userRouter = Router();
 
 //전체 유저확인(관리자용)
-userRouter.get('/', asyncHandler(async (req,res,next)=>{
+userRouter.get('/',checkToken,asyncHandler(async (req,res,next)=>{//isAdmin
         const {page,pageSize}=req.query;
         const userData = await userModel.getUsers(page,pageSize);
         res.status(200).send(userData);
@@ -33,7 +33,7 @@ userRouter.post('/login',checkLogin,asyncHandler(async (req,res,next)=>{
 }))
 
 //회원가입
-userRouter.post('/join',sameUser ,asyncHandler(async (req,res,next)=>{
+userRouter.post('/join',duplicateCheckUser,asyncHandler(async (req,res,next)=>{
 
         const {email,nickname,password}=req.body
         await userModel.joinUser(email,nickname,password)
@@ -41,10 +41,10 @@ userRouter.post('/join',sameUser ,asyncHandler(async (req,res,next)=>{
 }))
 
 //회원정보수정
-userRouter.put('/',checkToken,asyncHandler(async (req,res,next)=>{
+userRouter.put('/',checkToken,duplicateCheckUser,asyncHandler(async (req,res,next)=>{
         const userData = req.user
-        const {email,nickname,password}=req.body
-        await userModel.updateUser(userData,email,nickname,password)
+        const {email,nickname,password,newPassword}=req.body
+        await userModel.updateUser(userData,email,nickname,password,newPassword)
         res.status(201).send("success")
 }))
 

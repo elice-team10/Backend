@@ -1,7 +1,7 @@
 import { CommentSchema } from "../schemas/comment-schema.js";
 import mongoose from "mongoose";
 
-const Comment = mongoose.model("comment",CommentSchema);
+export const Comment = mongoose.model("Comment",CommentSchema);
 const ObjectId = mongoose.Types.ObjectId;
 
 class CommentModel{
@@ -34,7 +34,7 @@ class CommentModel{
     /* 코멘트 보기 (마이페이지)
     사용자 닉네임*/
     async findMyComment(data){
-        const findedMyComment = await Comment.find({nickname : data})
+        const findedMyComment = await Comment.find({nickname : data}).populate('postId')
 
         return findedMyComment;
     }
@@ -42,7 +42,7 @@ class CommentModel{
     /* 모든 코멘트 보기 (관리자)
     사용자 닉네임*/
     async findAllComment(){
-        const findedAllComment = await Comment.find({})
+        const findedAllComment = await Comment.find({}).populate('postId')
 
         return findedAllComment;
     }
@@ -51,7 +51,7 @@ class CommentModel{
     게시글id */
     async findPostComment(data){
     
-        const findedPostComment = await Comment.find({postId:data})
+        const findedPostComment = await Comment.find({postId:data}).populate('postId')
 
         return findedPostComment;
     }

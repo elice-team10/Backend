@@ -2,13 +2,12 @@ import { PostSchema } from "../schemas/postSchema.js";
 import { errGenerator } from "../../../errGenerator.js";
 import mongoose from "mongoose";
 
-const Post = mongoose.model("post",PostSchema);
+export const Post = mongoose.model("Post",PostSchema);
 const ObjectId = mongoose.Types.ObjectId;
 
 class PostModel{
     /* 새 게시글 생성 */
     async createPost(postInfo){
-        
         const createdPost = await Post.create(postInfo)
         
         return createdPost;
@@ -43,7 +42,8 @@ class PostModel{
 
     /* 모든 게시글 보기 (관리자)*/
     async findAllPost(){
-        const findedAllPost = await Post.find({})
+
+        const findedAllPost = await Post.find()
 
         return findedAllPost;
     }

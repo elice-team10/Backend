@@ -5,7 +5,8 @@ import mongoose from "mongoose";
 import asyncHandler from "express-async-handler"
 
 const ObjectId = mongoose.Types.ObjectId;
-//헤더에 저장된 토큰의 유무를 체크하고 복호화하여 userId 반환
+
+//헤더에 저장된 토큰의 유무를 체크하고 user데이터 반환
 export const checkToken = asyncHandler(async (req,res,next)=>{ 
 
         const isToken = req.cookies.loginToken;
