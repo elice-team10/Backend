@@ -27,9 +27,9 @@ userRouter.post('/login',checkLogin,asyncHandler(async (req,res,next)=>{
 
         const {_id,status,nickname}=req.user;
         const token=await userModel.loginUser(_id)
-        res.status(200)
-        .cookie("loginToken",token,{httpOnly:true,maxAge:1000*60*60*3,sameSite:'None',secure:false})
-        .json({token,status,nickname});
+        res.status(200).json({token,status,nickname});
+        // .cookie("loginToken",token,{httpOnly:true,maxAge:1000*60*60*3,sameSite:'None',secure:false})
+        
 }))
 
 //회원가입
@@ -52,16 +52,15 @@ userRouter.put('/',checkToken,duplicateCheckUser,asyncHandler(async (req,res,nex
 userRouter.delete('/',checkToken, asyncHandler( async (req,res,next)=>{
         const userData = req.user;
         await userModel.delUser(userData);
-        res.status(204).cookie("loginToken","",{httpOnly:true,maxAge:0}).send("success");
+        res.status(204).send("success"); 
+        //.cookie("loginToken","",{httpOnly:true,maxAge:0})
 }))
 
 //로그아웃
-userRouter.delete('/logout',checkToken,asyncHandler(async (req,res,next)=>{
-        res.status(204)
-        .cookie("loginToken","",{httpOnly:true,maxAge:0})
-        .send("success");
+/*userRouter.delete('/logout',checkToken,asyncHandler(async (req,res,next)=>{
+        res.status(204).send("success");.cookie("loginToken","",{httpOnly:true,maxAge:0})
 }));
-
+*/
 
 //회원강제탈퇴(관리자용)
 userRouter.delete('/:userId',checkToken,isAdmin,asyncHandler(async (req,res,next)=>{
