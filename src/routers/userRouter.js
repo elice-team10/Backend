@@ -10,7 +10,7 @@ import { duplicateCheckUser } from "../middlewares/duplicateCheckUser.js";
 const userRouter = Router();
 
 //전체 유저확인(관리자용)
-userRouter.get('/',checkToken,asyncHandler(async (req,res,next)=>{//isAdmin
+userRouter.get('/',asyncHandler(async (req,res,next)=>{//isAdmin
         const {page,pageSize}=req.query;
         const userData = await userModel.getUsers(page,pageSize);
         res.status(200).send(userData);
