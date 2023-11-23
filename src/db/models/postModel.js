@@ -1,5 +1,5 @@
 import { PostSchema } from "../schemas/postSchema.js";
-import { errGenerator } from "../../../errGenerator.js";
+//import { errGenerator } from "../../../errGenerator.js";
 import mongoose from "mongoose";
 
 export const Post = mongoose.model("Post",PostSchema);
@@ -17,7 +17,10 @@ class PostModel{
     게시글 id*/
     async removePost(data){
         const removedPost = await Post.findByIdAndDelete(new ObjectId(data))
-        // mongoDB에서 id를 어떤 이름으로 지정하는지 확인
+
+        if(!removedPost){
+            return { result : null }
+        }
 
         return { result : "deleted" };
     }
@@ -25,38 +28,72 @@ class PostModel{
     /* 게시글 변경
      업데이트할 게시글 내용, object화 id*/
     async updatePost(postId,data){
-     
         const updatedPost
-         = await Post.findByIdAndUpdate(new ObjectId(postId),data)
+         = await Post.findByIdAndUpdate(new ObjectId(postId),data,{new:true})
 
         return updatedPost;
     }
 
     /* 게시글 보기 (마이페이지)
     사용자 닉네임*/
-    async findMyPost(nickname){
-        const findedMyPost = await Post.find({nickname : nickname})
+    async findMyPost(page, pageSize, data){
+        const MaxPost = Number(pageSize)
+        const hidePost = (Number(page)-1)*MaxPost
+        const findedMyPost = await Post.find({nickname : data}).skip(hidePost).limit(MaxPost);
 
         return findedMyPost;
     }
 
     /* 모든 게시글 보기 (관리자)*/
-    async findAllPost(){
+    async findAllPost(page,pageSize){
 
-        const findedAllPost = await Post.find()
+        const MaxPost = Number(pageSize)
+        const hidePost = (Number(page)-1)*MaxPost
+        const findedAllPost = await Post.find({}).skip(hidePost).limit(MaxPost);
 
         return findedAllPost;
     }
 
     /* 게시글 보기 (id)*/
     async findPost(data){
-        
         const findedAllPost = await Post.findById(new ObjectId(data))
 
         return findedAllPost;
     }
 
+    /* 게시글 검색 -> 반환값이 무조건 빈배열 */
+    async searchPost(data){
+        const { word, board_category, product_category, event_date, event_location, page, pageSize } = data;
+        const filter = {};
+        if(word){
+             filter.$or = [
+                 { title: { $regex: word, $options: 'i' } },
+                 { context: { $regex: word, $options: 'i' } }
+             ]
+            //filter.title = word
+        }    
+        if(board_category){
+            filter.board_category = board_category
+        }
+        if(product_category){
+            filter.product_category = product_category
+        }
+        if(event_date){
+            filter.event_date = event_date
+        }
+        if(event_location){
+            filter.event_location = event_location;
+        }
+        console.log(filter)
+
+        const MaxPost = Number(pageSize)
+        const hidePost = (Number(page)-1)*MaxPost
+
+        const searchResult = await Post.find(filter).skip(hidePost).limit(MaxPost);
+
+        return searchResult;
+    }
 }
 
 const postModel = new PostModel();
-export {postModel};
+export { postModel };
