@@ -66,11 +66,11 @@ class PostModel{
         const { word, board_category, product_category, event_date, event_location, page, pageSize } = data;
         const filter = {};
         if(word){
-             filter.$or = [
-                 { title: { $regex: word, $options: 'i' } },
-                 { context: { $regex: word, $options: 'i' } }
-             ]
-            //filter.title = word
+              filter.$or = [
+                  { title: { $regex: word, $options: 'i' } },
+                  { context: { $regex: word, $options: 'i' } }
+              ]
+             //filter.title = word
         }    
         if(board_category){
             filter.board_category = board_category

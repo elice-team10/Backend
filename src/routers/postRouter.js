@@ -98,7 +98,8 @@ postRouter.delete('/:postId',asyncHandler(async (req, res, next) => { //checkTok
 }))
 
 //검색기능 테스트
-postRouter.get('/search', asyncHandler(async (req, res, next) => {  
+postRouter.get('/post/search', asyncHandler(async (req, res, next) => {  
+    console.log('test')
     const data = req.query;
     console.log(data)
 
