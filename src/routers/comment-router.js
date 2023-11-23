@@ -3,8 +3,7 @@ const commentRouter = express.Router();
 import asyncHandler from 'express-async-handler'
 import { commentModel } from '../db/models/comment-model.js'
 import { checkToken } from "../middlewares/checkToken.js";
-import { isAdmin } from "../middlewares/isAdmin.js";
-
+import { sameUser } from "../middlewares/sameUser.js";
 
 //마이페이지 - 작성한 댓글 가져오기
 commentRouter.get('/:nickname',asyncHandler(async (req, res, next) => {  // checkToken,
@@ -25,8 +24,8 @@ commentRouter.get('/post/:postId', asyncHandler(async (req, res, next) => {
 }))
 
 
-//관리자페이지 - 전체 댓글 보기
-commentRouter.get('/',asyncHandler(async (req, res, next) => {   //checkToken,isAdmin,
+//관리자&마이페이지 - 전체 댓글 보기
+commentRouter.get('/',asyncHandler(async (req, res, next) => {   //checkToken
 
     const findedAllComment
         = await commentModel.findAllComment()

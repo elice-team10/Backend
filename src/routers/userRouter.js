@@ -10,16 +10,16 @@ import { duplicateCheckUser } from "../middlewares/duplicateCheckUser.js";
 const userRouter = Router();
 
 //전체 유저확인(관리자용)
-userRouter.get('/',asyncHandler(async (req,res,next)=>{//isAdmin
+userRouter.get('/',asyncHandler(async (req,res,next)=>{//checkToken,isAdmin
         const {page,pageSize}=req.query;
         const userData = await userModel.getUsers(page,pageSize);
-        res.status(200).send(userData);
+        res.status(200).json(userData);
 }))
 
 //특정 유저확인
 userRouter.get('/detail',checkToken,asyncHandler(async (req,res,next)=>{
         const userData = req.user;
-        res.status(200).send(userData);
+        res.status(200).json(userData);
 }))
 
 //로그인

@@ -3,8 +3,7 @@ const postRouter = express.Router();
 import asyncHandler from 'express-async-handler'
 import { postModel } from '../db/models/postModel.js'
 import { checkToken } from "../middlewares/checkToken.js";
-import { isAdmin } from "../middlewares/isAdmin.js";
-
+import { sameUser } from "../middlewares/sameUser.js";
 import multer from "multer";
 
 const storage = multer.diskStorage({
@@ -22,7 +21,7 @@ const storage = multer.diskStorage({
 const upload = multer({storage})
 
 
-//마이페이지 - 게시글 가져오기
+//관리자&마이페이지 - 게시글 가져오기
 postRouter.get('/:nickname',asyncHandler(async (req, res, next) => {  //checkToken,
     const findedPost
         = await postModel.findMyPost(req.params.nickname)
@@ -54,10 +53,14 @@ postRouter.get('/', asyncHandler(async (req, res, next) => {
 
 //게시글 작성
 postRouter.post('/',upload.single('picture'),asyncHandler(async (req, res, next) => { //checkToken, 
-    let newPost = req.body 
-    const picture="/storage/"+req.file.filename
-    console.log(picture)
-    newPost.picture=picture
+    let newPost = req.body
+    let picture = ""
+
+    if(req.file){
+        picture="/storage/"+req.file.filename
+        newPost.picture=picture
+    }
+
     const createdNewPost= await postModel.createPost(newPost)
 
     res.status(200).send(createdNewPost);
@@ -65,12 +68,19 @@ postRouter.post('/',upload.single('picture'),asyncHandler(async (req, res, next)
 
 
 //게시글 수정하기
-postRouter.put('/:postId',asyncHandler(async (req, res, next) => { //checkToken, sameUser
+postRouter.put('/:postId',upload.single('picture'),asyncHandler(async (req, res, next) => { //checkToken, sameUser
 
-    const post = req.body;
+    let newPost = req.body
+    let picture = ""
     const postId=req.params.postId
+
+    if(req.file){
+        picture="/storage/" + req.file.filename
+        newPost.picture=picture
+    }
+
     const changedPost
-        = await postModel.updatePost(postId,post)
+        = await postModel.updatePost(postId,newPost)
 
     res.status(200).send(changedPost)
 }))

@@ -14,7 +14,7 @@ export const checkToken = asyncHandler(async (req,res,next)=>{
             throw errGenerator("로그인 해주세요",404,{});
         }
 
-        const tokenData = jwt.verify(isToken.substr(7),process.env.jwt_key) //postman용
+        const tokenData = jwt.verify(isToken.substr(7),process.env.jwt_key) 
         const userData = await User.findById(new ObjectId(tokenData.userId));
         
         if(!userData){
