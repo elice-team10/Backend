@@ -6,18 +6,19 @@ import { checkToken } from "../middlewares/checkToken.js";
 import { sameUser } from "../middlewares/sameUser.js";
 import {isAdmin} from "../middlewares/isAdmin.js"
 
-//마이페이지 - 작성한 댓글 가져오기
-commentRouter.get('/:nickname',asyncHandler(async (req, res, next) => {  // checkToken,
-    // const {page,pageSize}=req.query;
+//관리자&마이페이지 - 작성한 댓글 가져오기
+commentRouter.get('/',checkToken,asyncHandler(async (req, res, next) => {  // 
+    const userData=req.user
+    //const {page,pageSize}=req.query;
     const findedComment
-        = await commentModel.findMyComment(req.params.nickname)
+        = await commentModel.findMyComment(userData)
 
     res.status(200).send(findedComment);
 }))
 
 
 //게시글 - 댓글 가져오기
-commentRouter.get('/detail/:postId', asyncHandler(async (req, res, next) => {
+commentRouter.get('/:postId', asyncHandler(async (req, res, next) => {
 
     const findedComment
         = await commentModel.findPostComment(req.params.postId)
@@ -25,40 +26,10 @@ commentRouter.get('/detail/:postId', asyncHandler(async (req, res, next) => {
     res.status(200).send(findedComment);
 }))
 
-
-
-//관리자페이지 - 전체 댓글 보기
-commentRouter.get('/', asyncHandler(async (req, res, next) => {   //isAdmin,
-    //const {page,pageSize}=req.query;
-
-    const findedAllComment
-        = await commentModel.findAllComment()
-
-    res.status(200).send(findedAllComment);
-}))
-
-// 관리자&마이페이지 통합
-// commentRouter.get('/',isAdmin, asyncHandler(async (req, res, next) => {   //isAdmin,
-//     const {page,pageSize}=req.query;
-//     if(req.user.status == 1){
-//         const findedAllComment
-//         = await commentModel.findAllComment(page,pageSize,req.params.nickname)
-
-//         res.status(200).send(findedAllComment);
-//     }
-//     if(req.user.status == 0){
-//         const findedAllComment
-//         = await commentModel.findAllComment(page,pageSize)
-
-//         res.status(200).send(findedAllComment);
-//     }
-// }))
-
-
 //댓글 달기
-commentRouter.post('/:postId',asyncHandler(async (req, res, next) => { // checkToken,
+commentRouter.post('/:postId',checkToken,asyncHandler(async (req, res, next) => { // 
     const newComment = {
-        nickname: req.body.nickname,
+        nickname: req.user.nickname,
         content: req.body.content,
         postId: req.params.postId,
     }
@@ -71,8 +42,7 @@ commentRouter.post('/:postId',asyncHandler(async (req, res, next) => { // checkT
 
 
 //댓글 수정하기
-commentRouter.put('/:commentId',asyncHandler(async (req, res, next) => {//checkToken,sameUser
-
+commentRouter.put('/:commentId',checkToken,sameUser,asyncHandler(async (req, res, next) => {//
     const comment = {
         content: req.body.content,
         commentId: req.params.commentId,
@@ -85,7 +55,7 @@ commentRouter.put('/:commentId',asyncHandler(async (req, res, next) => {//checkT
 
 
 // 게시글 - 댓글 삭제하기
-commentRouter.delete('/:commentId',asyncHandler(async (req, res, next) => { //checkToken,sameUser
+commentRouter.delete('/:commentId',checkToken,sameUser,asyncHandler(async (req, res, next) => { //
 
     const deleted
         = await commentModel.removeComment(req.params.commentId);

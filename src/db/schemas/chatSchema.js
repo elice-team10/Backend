@@ -1,8 +1,8 @@
 import { Schema } from "mongoose";
 
-const IndividualMessageSchema = new Schema(
+const ChatSchema = new Schema(
   {
-    sendedBy: {
+    nickname: {
       type: String,
       required: true,
     },
@@ -14,21 +14,25 @@ const IndividualMessageSchema = new Schema(
       type: String,
       required: true,
     },
+    chatRoomId:{
+      type : String,
+      required : true
+    }
   },
   { _id: false }
 );
 
-const ChatSchema = new Schema(
+const ChatRoomSchema = new Schema(
   {
     nickname: {
       type: String,
       required: true,
+      
     },
     with: {
       type: String,
       required: true,
     },
-    chat: [IndividualMessageSchema],
   },
   {
     timestamps: true,

@@ -52,13 +52,19 @@ class PostModel{
         
     }
 
-    /* 게시글 보기 (마이페이지)
+    /* 게시글 보기 (관리자&마이페이지)
     사용자 닉네임*/
     async findMyPost(data){
         try{
-            //const MaxPost = Number(pageSize)
-            //const hidePost = (Number(page)-1)*MaxPost
-            const findedMyPost = await Post.find({nickname : data})//.skip(hidePost).limit(MaxPost);
+        let filter={}
+        if(data.status===1){ 
+            filter.nickname=data.status.nickname
+        }
+
+        ///const MaxPost = Number(pageSize)
+        //const hidePost = (Number(page)-1)*MaxPost
+        const findedMyPost = await Post.find(filter)
+        //.skip(hidePost).limit(MaxPost);
 
             return findedMyPost;
         }catch(e){
@@ -81,17 +87,6 @@ class PostModel{
 
     }
 
-    /*async findAllPost(page,pageSize){
-
-            return findedAllPost;
-        }catch(e){
-            throw e;
-        }
-    }
-        
-    }*/
-
-
     /* 게시글 보기 (id)*/
     async findPost(data){
         try{
@@ -106,66 +101,35 @@ class PostModel{
 
     /* 게시글 검색 -> 반환값이 무조건 빈배열 */
     async searchPost(data){
-        try{
-            const { word, board_category, product_category, event_date, event_location } = data;
-            const filter = {};
-            if(word){
-                filter.$or = [
-                    { title: { $regex: word, $options: 'i' } },
-                    { context: { $regex: word, $options: 'i' } }
-                ]
-                //filter.title = word
-            }    
-            if(board_category){
-                filter.board_category = board_category
-            }
-            if(product_category){
-                filter.product_category = product_category
-            }
-            if(event_date){
-                filter.event_date = event_date
-            }
-            if(event_location){
-                filter.event_location = event_location;
-            }
-            console.log(filter)
+        const { word, board_category, product_category, event_date, event_location} = data;
+        console.log(data)
+        let filter = {};
+        if(word){
+             filter={$or:[
+                {title:{ $regex: word, $options: 'i' }}, 
+                {content:{ $regex: word, $options: 'i' }}
+             ]}
+             
+            //filter.title = word
+        }    
+        if(board_category){
+            filter.board_category = board_category
+        }
+        if(product_category){
+            filter.product_category = product_category
+        }
+        if(event_date){
+            filter.event_date = event_date
+        }
+        if(event_location){
+            filter.event_location = event_location;
+        }
+        console.log(filter)
 
             //const MaxPost = Number(pageSize)
             //const hidePost = (Number(page)-1)*MaxPost
 
             const searchResult = await Post.find(filter)//.skip(hidePost).limit(MaxPost);
-
-        // const { word, board_category, product_category, event_date, event_location, page, pageSize } = data;
-        // console.log(data)
-        // let filter = {};
-        // if(word){
-        //      filter={$or:[
-        //         {title:{ $regex: word, $options: 'i' }}, 
-        //         {content:{ $regex: word, $options: 'i' }}
-        //      ]}
-             
-        //     //filter.title = word
-        // }    
-        // if(board_category){
-        //     filter.board_category = board_category
-        // }
-        // if(product_category){
-        //     filter.product_category = product_category
-        // }
-        // if(event_date){
-        //     filter.event_date = event_date
-        // }
-        // if(event_location){
-        //     filter.event_location = event_location;
-        // }
-        // console.log(filter)
-
-        // //const MaxPost = Number(pageSize)
-        // //const hidePost = (Number(page)-1)*MaxPost
-
-        // const searchResult = await Post.find(filter)
-        // //.skip(hidePost).limit(MaxPost);
-
 
             return searchResult;
         }catch(e){
@@ -173,7 +137,7 @@ class PostModel{
         }
         
     }
-}
+
 
 const postModel = new PostModel();
 export { postModel };
