@@ -4,12 +4,13 @@ import asyncHandler from 'express-async-handler'
 import { commentModel } from '../db/models/comment-model.js'
 import { checkToken } from "../middlewares/checkToken.js";
 import { sameUser } from "../middlewares/sameUser.js";
+import {isAdmin} from "../middlewares/isAdmin.js"
 
 //마이페이지 - 작성한 댓글 가져오기
 commentRouter.get('/:nickname',asyncHandler(async (req, res, next) => {  // checkToken,
-    const {page,pageSize}=req.query;
+    // const {page,pageSize}=req.query;
     const findedComment
-        = await commentModel.findMyComment(page,pageSize,req.params.nickname)
+        = await commentModel.findMyComment(req.params.nickname)
 
     res.status(200).send(findedComment);
 }))
@@ -28,13 +29,30 @@ commentRouter.get('/detail/:postId', asyncHandler(async (req, res, next) => {
 
 //관리자페이지 - 전체 댓글 보기
 commentRouter.get('/', asyncHandler(async (req, res, next) => {   //isAdmin,
-    const {page,pageSize}=req.query;
+    //const {page,pageSize}=req.query;
 
     const findedAllComment
-        = await commentModel.findAllComment(page,pageSize)
+        = await commentModel.findAllComment()
 
     res.status(200).send(findedAllComment);
 }))
+
+// 관리자&마이페이지 통합
+// commentRouter.get('/',isAdmin, asyncHandler(async (req, res, next) => {   //isAdmin,
+//     const {page,pageSize}=req.query;
+//     if(req.user.status == 1){
+//         const findedAllComment
+//         = await commentModel.findAllComment(page,pageSize,req.params.nickname)
+
+//         res.status(200).send(findedAllComment);
+//     }
+//     if(req.user.status == 0){
+//         const findedAllComment
+//         = await commentModel.findAllComment(page,pageSize)
+
+//         res.status(200).send(findedAllComment);
+//     }
+// }))
 
 
 //댓글 달기
@@ -74,6 +92,7 @@ commentRouter.delete('/:commentId',asyncHandler(async (req, res, next) => { //ch
 
     res.status(200).json(deleted);
 }))
+
 
 
 export { commentRouter };
