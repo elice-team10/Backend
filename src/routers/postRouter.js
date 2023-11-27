@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
       const originalname = file.originalname;
       
       // 인코딩된 파일 이름 생성
-      const encodedFilename = timestamp + "-" + encodeURIComponent(originalname);
+      const encodedFilename = timestamp + "-" + originalname;
   
       req.filename = encodedFilename;
       cb(null, encodedFilename);
