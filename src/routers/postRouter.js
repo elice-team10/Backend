@@ -9,16 +9,20 @@ import {isAdmin} from "../middlewares/isAdmin.js"
 import multer from "multer";
 
 const storage = multer.diskStorage({
-  destination:function(req,file,cb){
-    cb(null,process.env.storagePath);
-  },
-  filename:function(req,file,cb){
-    const filename=
-      new Date().getTime().toString().slice(0,8)+"-"+file.originalname;
-    req.filename=filename;
-    cb(null,filename);
-  }
-});
+    destination: function(req, file, cb) {
+      cb(null, process.env.storagePath);
+    },
+    filename: function(req, file, cb) {
+      const timestamp = new Date().getTime().toString().slice(0, 8);
+      const originalname = file.originalname;
+      
+      // 인코딩된 파일 이름 생성
+      const encodedFilename = timestamp + "-" + encodeURIComponent(originalname);
+  
+      req.filename = encodedFilename;
+      cb(null, encodedFilename);
+    }
+  });
 
 const upload = multer({storage})
 
