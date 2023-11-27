@@ -3,16 +3,30 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { errGenerator } from "../../../errGenerator.js";
+import nodemailer from 'nodemailer'
+import dotenv from "dotenv";
 
 export const User = mongoose.model("User",UserSchema);
 const ObjectId = mongoose.Types.ObjectId;
 
+dotenv.config();
+
+const transport = nodemailer.createTransport({
+    service:'Gmail',
+    auth:{
+        user:'pob1109@gmail.com',
+        pass: process.env.emailPassword
+    }
+})
+
 class UserModel{
-    async getUsers(page,pageSize){ //전체 유저를 현재page 기준으로 pageSize만큼만 전송
+    async getUsers(){ //전체 유저를 현재page 기준으로 pageSize만큼만 전송
         try{
-            const MaxPost = Number(pageSize)
-            const hidePost = (Number(page)-1)*MaxPost
-            const usersData = await User.find({}).skip(hidePost).limit(MaxPost);
+            //const MaxPost = Number(pageSize)
+            //const hidePost = (Number(page)-1)*MaxPost
+            const usersData = await User.find({})
+            
+            //.skip(hidePost).limit(MaxPost);
             return usersData;
         }catch(err){
             throw err
@@ -58,7 +72,7 @@ class UserModel{
             }           
             
             const newUser = {
-                email:email,
+                email:email, //바꾸면 안되잖아?
                 nickname:nickname,
                 password:hashedPassword,
             }
@@ -83,6 +97,33 @@ class UserModel{
         try{
             await User.findByIdAndDelete(new ObjectId(id));
             return;
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async findPassword(email){
+        try{
+            const userData = await User.findOne({email})
+            if(!userData){
+                throw errGenerator("해당 이메일의 유저가 존재하지 않습니다.",404,{})
+            }
+            
+            const newPassword = Math.floor(Math.random() * (10 ** 8)).toString().padStart(8, '0')
+            const hashedPassword = await bcrypt.hash(newPassword, 5);
+            const message = {
+                from:'pob1109@gmail.com',
+                to:email,
+                subject:'lost_found 계정의 비밀번호가 변경되었습니다.',
+                text:`변경된 비밀번호 : ${newPassword}`
+            }
+
+            await transport.sendMail(message)
+
+            await User.findOneAndUpdate(userData,{password:hashedPassword});
+
+            return;
+
         }catch(err){
             throw err;
         }

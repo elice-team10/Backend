@@ -4,8 +4,9 @@ import {shortId} from "./shortId/shortId.js";
 
 const CommentSchema = new Schema(
   { 
-    nickname: {
-      type: String,
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     content: {
