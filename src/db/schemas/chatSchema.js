@@ -2,8 +2,9 @@ import { Schema } from "mongoose";
 
 const ChatSchema = new Schema(
   {
-    nickname: {
-      type: String,
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     timestamp: {
@@ -24,15 +25,19 @@ const ChatSchema = new Schema(
 
 const ChatRoomSchema = new Schema(
   {
-    nickname: {
-      type: String,
+    userId1: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
+    },
+    userId2: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    lastChat:{
       
-    },
-    with: {
-      type: String,
-      required: true,
-    },
+    }
   },
   {
     timestamps: true,
@@ -40,6 +45,45 @@ const ChatRoomSchema = new Schema(
   }
 );
 
+/*export { ChatSchema };
+
+
+import { Schema } from "mongoose";
+
+const IndividualMessageSchema = new Schema(
+  {
+    sendedBy: {
+      type: String,
+      required: true,
+    },
+    timestamp: {
+      type: Date,
+      default: Date.now,
+    },
+    content: {
+      type: String,
+      required: true,
+    },
+  },
+  { _id: false }
+);
+
+const ChatSchema = new Schema(
+  {
+    nickname: {
+      type: String,
+      required: true,
+    },
+    with: {
+      type: String,
+      required: true,
+    },
+    chat: [IndividualMessageSchema],
+  },
+  {
+    timestamps: true,
+    collection: "chat",
+  }
+);*/
+
 export { ChatSchema };
-
-

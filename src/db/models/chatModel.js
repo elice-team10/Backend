@@ -79,9 +79,13 @@ class ChatModel {
         }
     }*/
     // 내 모든 채팅방 확인
-    async allChat(){
+    async allChat(nick1,nick2){
         try{
-            const allMessage = await Chat.find({nickname : data.nickname})
+            const allMessage = await Chat.find(
+            {$or:[
+                {nickname1:nick1}, 
+                {nickname2:nick2}
+             ]})
             return allMessage;
         }catch(e){
             throw err;

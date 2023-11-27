@@ -42,7 +42,7 @@ commentRouter.post('/:postId',checkToken,asyncHandler(async (req, res, next) => 
 
 
 //댓글 수정하기
-commentRouter.put('/:commentId',checkToken,sameUser,asyncHandler(async (req, res, next) => {//
+commentRouter.put('/:commentId/:userId',checkToken,sameUser,asyncHandler(async (req, res, next) => {//
     const comment = {
         content: req.body.content,
         commentId: req.params.commentId,
@@ -55,7 +55,7 @@ commentRouter.put('/:commentId',checkToken,sameUser,asyncHandler(async (req, res
 
 
 // 게시글 - 댓글 삭제하기
-commentRouter.delete('/:commentId',checkToken,sameUser,asyncHandler(async (req, res, next) => { //
+commentRouter.delete('/:commentId/:userId',checkToken,sameUser,asyncHandler(async (req, res, next) => { //
 
     const deleted
         = await commentModel.removeComment(req.params.commentId);

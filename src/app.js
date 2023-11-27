@@ -36,6 +36,7 @@ app.use('/api/comment',commentRouter);
 
 app.use((err,req,res,next)=>{
     console.log(err);
-    res.status(err.status || 500).send(err.message)
+    res.status(err.status || 500).send(err.message).json(err.res || {})
+
 })
 export {app};
