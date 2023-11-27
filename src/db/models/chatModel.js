@@ -1,111 +1,80 @@
 import { ChatSchema } from "../schemas/chatSchema.js";
+import { ChatWrapSchema } from "../schemas/chatWrapSchema.js";
 import mongoose from "mongoose";
 
 export const Chat = mongoose.model("Chat",ChatSchema)
+export const ChatWrap = mongoose.model("ChatWrap",ChatWrapSchema)
 const ObjectId = mongoose.Types.ObjectId;
 
 class ChatModel {
 
-    // 채팅방이 없으면 하나 만들고, 있으면 있는 객체의 배열 안에 push
-    /*async sendMessage(data){
+    async makeChatRoom(userId1,userId2){
         try{
-            const findChatting = await Chat.findOne({nickname : data.nickname, with : data.with})
-            if(!findChatting){
-                const chatData = {
-                    nickname : data.nickname,
-                    with : data.with,
-                    chat : data.chat,   
-                }
-
-                const sendedMessage = await Chat.create(chatData)
-                
-                return sendedMessage;
-            }else{
-                if(!data.chat){
-                    return findChatting
-                }
-                findChatting.chat.push(data.chat);
-                findChatting.save();
-
-                return findChatting;
-            }
+            const chatRoom=await Chat.create({})
             
-        }catch(e){
-            throw err;
-        }
-    }
-*/
-    async makeChatRoom(nick1,nick2){
-        try{
-            const chatData = {
-                nickname1 : nick1,
-                nickname2 : nick2,
-                chat : [],   
+            const chatData1 = {
+                userId : userId1,
+                roomId : chatRoom._id
+            };
+            const chatData2 = {
+                userId : userId2,
+                roomId : chatRoom._id
             }
-            await Chat.create(chatData)
+
+            await ChatWrap.create(chatData1)
+            await ChatWrap.create(chatData2)
         return;
         }catch(err){
             throw err;
         }
     }
 
-    async sendMessage(chatRoomId,data){
+    async sendMessage(roomId,content,nickname,timestamps){
         try{
-            
-            await Chat.findByIdAndUpdate(new ObjectId(chatRoomId),{$push:{chat:data}})
+            const data={
+                nickname,
+                content,
+                timestamps
+            }
+
+            await Chat.findByIdAndUpdate(new ObjectId(roomId),{$push:{content:data}})
             return;
         }catch(err){
             throw err;
         }
     }
 
-    async readMessage(chatRoomId,lastTimestamp){
+    async readMessage(roomId){
         try{
-            const sendedMessage = await Chat.find(new ObjectId(chatRoomId))
-            
-            return sendedMessage;
+            const chatData = await Chat.findById(new ObjectId(roomId))
+            return chatData.content;;
         }catch(err){
            throw err;
         }
     }
 
-    /*async getChatRoom(){
+    // 내 모든 채팅방 확인
+    async getChat(userId){
         try{
-            const chatRoomData = await Chat.find({})
-            return chatRoomData;
+            const wrapData = await ChatWrap.find({userId})
+            return wrapData
         }catch(err){
             throw err;
         }
-    }*/
-    // 내 모든 채팅방 확인
-    async allChat(nick1,nick2){
-        try{
-            const allMessage = await Chat.find(
-            {$or:[
-                {nickname1:nick1}, 
-                {nickname2:nick2}
-             ]})
-            return allMessage;
-        }catch(e){
-            throw err;
-        }
     }
 
-    /* 
-    async oneChat(){
+    async getOutChat(userId,roomId){
         try{
-            const allMessage = await Chat.find({nickname : data.nickname, with : data.with})
-            return allMessage;
-        }catch(e){
+
+            await ChatWrap.findOneAndDelete({userId,roomId})
+            return
+        }catch(err){
             throw err;
         }
     }
-    */
 }
 
-/*  get- 채팅창 모든 내용 불러오기
-    post - 채팅 작성
-*/ 
+
 const chatModel= new ChatModel()
 
 export { chatModel }
