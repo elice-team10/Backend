@@ -8,11 +8,11 @@ export const sameUser = asyncHandler(async (req,res,next)=>{
     }
 
     const tokenUser=String(req.user._id)
-    const postUser=req.body.userId
+    const postUser=req.params.userId
 
     if(tokenUser!==postUser){
-        throw errGenerator("작성자가 일치하지 않습니다.",403,{});
-    }   
+        throw errGenerator("작성자가 일치하지 않습니다.",403,{tokenUser,postUser});
+    }
     
     next();
 })

@@ -85,7 +85,7 @@ postRouter.post('/',checkToken,upload.single('picture'),asyncHandler(async (req,
 
 
 //게시글 수정하기
-postRouter.put('/:postId',checkToken,sameUser,upload.single('picture'),asyncHandler(async (req, res, next) => { //
+postRouter.put('/:postId/:userId',checkToken,sameUser,upload.single('picture'),asyncHandler(async (req, res, next) => { //
     let newPost = req.body
     let picture = ""
     const postId=req.params.postId
@@ -94,18 +94,16 @@ postRouter.put('/:postId',checkToken,sameUser,upload.single('picture'),asyncHand
         picture="/storage/" + req.file.filename
         newPost.picture=picture
     }
-    const changedPost
-
-        = await postModel.updatePost(postId,newPost)
+    const changedPost= await postModel.updatePost(postId,newPost)
 
     res.status(200).send(changedPost)
 }))
 
 
 // 게시글 삭제하기
-postRouter.delete('/:postId',checkToken ,sameUser,asyncHandler(async (req, res, next) => { //
-    const deleted
-        = await postModel.removePost(req.params.postId);
+postRouter.delete('/:postId/:userId',checkToken ,sameUser,asyncHandler(async (req, res, next) => { //
+
+    const deleted= await postModel.removePost(req.params.postId);
     await commentModel.removeAllComment(req.params.postId);
 
     res.status(200).json(deleted);
