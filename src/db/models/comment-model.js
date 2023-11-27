@@ -23,6 +23,10 @@ class CommentModel{
         try{
             const removedComment
             = await Comment.findByIdAndDelete(new ObjectId(data));
+            
+            if(!removedComment ){
+                return { result : null }
+            }
 
             return { result : "deleted" };
         }catch(e){
@@ -61,41 +65,23 @@ class CommentModel{
         try{
             let filter={}
             if(data.status===1){
-                filter.nickname=data.nickname
+                filter.userId=data._id
             }
             //const MaxPost = Number(pageSize)
             //const hidePost = (Number(page)-1)*MaxPost
-            const findedMyComment = await Comment.find(filter).populate('postId')//.skip(hidePost).limit(MaxPost);
+            const findedMyComment = await Comment.find(filter).populate('postId').populate('userId')//.skip(hidePost).limit(MaxPost);
 
             return findedMyComment;
         }catch(e){
             throw e;
         }
-    
-    }
-    
-
-    /* 모든 코멘트 보기 (관리자)
-    사용자 닉네임*/
-
-    async findAllComment(){
-        try{
-            //const MaxPost = Number(pageSize)
-            //const hidePost = (Number(page)-1)*MaxPost
-            const findedAllComment = await Comment.find({}).populate('postId');//.skip(hidePost).limit(MaxPost)
-        
-            return findedAllComment;
-        }catch(e){
-            throw e;
-        }
-        
     }
 
     /* 글에서 코멘트 보기
     게시글id */
     async findPostComment(data){
         try{
-            const findedPostComment = await Comment.find({postId:data}).populate('postId')
+            const findedPostComment = await Comment.find({postId:data}).populate('postId').populate('userId')
 
             return findedPostComment;
         }catch(e){

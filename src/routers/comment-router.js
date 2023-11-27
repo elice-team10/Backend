@@ -29,7 +29,7 @@ commentRouter.get('/:postId', asyncHandler(async (req, res, next) => {
 //댓글 달기
 commentRouter.post('/:postId',checkToken,asyncHandler(async (req, res, next) => { // 
     const newComment = {
-        nickname: req.user.nickname,
+        userId: req.user._id,
         content: req.body.content,
         postId: req.params.postId,
     }

@@ -1,9 +1,8 @@
 import { PostSchema } from "../schemas/postSchema.js";
 //import { errGenerator } from "../../../errGenerator.js";
 import mongoose from "mongoose";
-import { CommentSchema } from "../schemas/comment-schema.js";
 export const Post = mongoose.model("Post",PostSchema);
-export const Comment = mongoose.model("Comment",CommentSchema);
+
 const ObjectId = mongoose.Types.ObjectId;
 
 class PostModel{
@@ -24,10 +23,9 @@ class PostModel{
     async removePost(data){
         try{
             const removedPost = await Post.findByIdAndDelete(new ObjectId(data))
-            const removedComment = await Comment.deleteMany({postId : new ObjectId(data)});
-            
-
-            if(!removedPost && removedComment == 0){
+            // const removedComment = await Comment.deleteMany({postId : new ObjectId(data)});
+           
+            if(!removedPost ){
                 return { result : null }
             }
 
@@ -58,12 +56,11 @@ class PostModel{
         try{
         let filter={}
         if(data.status===1){ 
-            filter.nickname=data.nickname
+            filter.userId=data._id
         }
-        console.log()
         ///const MaxPost = Number(pageSize)
         //const hidePost = (Number(page)-1)*MaxPost
-        const findedMyPost = await Post.find(filter)
+        const findedMyPost = await Post.find(filter).populate('userId')
         //.skip(hidePost).limit(MaxPost);
 
             return findedMyPost;
@@ -73,24 +70,11 @@ class PostModel{
         
     }
 
-    /* 모든 게시글 보기 (관리자)*/
-
-    async findAllPost(){
-        try{
-            //const MaxPost = Number(pageSize)
-            //const hidePost = (Number(page)-1)*MaxPost
-            const findedAllPost = await Post.find({})//.skip(hidePost).limit(MaxPost);
-            return findedAllPost;
-        }catch(e){
-            throw e;
-        }
-
-    }
 
     /* 게시글 보기 (id)*/
     async findPost(data){
         try{
-            const findedAllPost = await Post.findById(new ObjectId(data))
+            const findedAllPost = await Post.findById(new ObjectId(data)).populate('userId')
 
             return findedAllPost;
         }catch(e){
@@ -129,7 +113,7 @@ class PostModel{
             //const MaxPost = Number(pageSize)
             //const hidePost = (Number(page)-1)*MaxPost
 
-            const searchResult = await Post.find(filter)//.skip(hidePost).limit(MaxPost);
+            const searchResult = await Post.find(filter).populate('userId')//.skip(hidePost).limit(MaxPost);
 
             return searchResult;
         }catch(e){

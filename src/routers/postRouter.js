@@ -55,31 +55,29 @@ postRouter.get('/', asyncHandler(async (req, res, next) => {
 
     //const {page,pageSize}=req.query;
 
-    const findedAllPost
-        = await postModel.findAllPost()
 
         
-    // const data=req.query;
+    const data=req.query;
 
-    // const findedPost
-    //     = await postModel.searchPost(data)
+     const findedPost
+         = await postModel.searchPost(data)
 
 
-    res.status(200).send(findedAllPost);
+    res.status(200).send(findedPost);
 }))
 
 
 //게시글 작성
 postRouter.post('/',checkToken,upload.single('picture'),asyncHandler(async (req, res, next) => { // 
     let newPost = req.body
-    newPost.nickname = req.user.nickname;
+    newPost.userId = req.user._id;
     let picture = ""
 
     if(req.file){
         picture="/storage/"+req.file.filename
         newPost.picture=picture
     }
-
+    
     const createdNewPost= await postModel.createPost(newPost)
 
     res.status(200).send(createdNewPost);
@@ -87,7 +85,7 @@ postRouter.post('/',checkToken,upload.single('picture'),asyncHandler(async (req,
 
 
 //게시글 수정하기
-postRouter.put('/:postId',checkToken, sameUser,upload.single('picture'),asyncHandler(async (req, res, next) => { //
+postRouter.put('/:postId',checkToken,sameUser,upload.single('picture'),asyncHandler(async (req, res, next) => { //
     let newPost = req.body
     let picture = ""
     const postId=req.params.postId
@@ -96,7 +94,6 @@ postRouter.put('/:postId',checkToken, sameUser,upload.single('picture'),asyncHan
         picture="/storage/" + req.file.filename
         newPost.picture=picture
     }
-
     const changedPost
 
         = await postModel.updatePost(postId,newPost)
@@ -109,7 +106,7 @@ postRouter.put('/:postId',checkToken, sameUser,upload.single('picture'),asyncHan
 postRouter.delete('/:postId',checkToken ,sameUser,asyncHandler(async (req, res, next) => { //
     const deleted
         = await postModel.removePost(req.params.postId);
-    await commentModel.removeAllComment({postId:req.params.postId});
+    await commentModel.removeAllComment(req.params.postId);
 
     res.status(200).json(deleted);
 }))
