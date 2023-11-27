@@ -61,7 +61,7 @@ class CommentModel{
         try{
             let filter={}
             if(data.status===1){
-                filter.nickname=data.status.nickname
+                filter.nickname=data.nickname
             }
             //const MaxPost = Number(pageSize)
             //const hidePost = (Number(page)-1)*MaxPost

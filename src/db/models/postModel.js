@@ -58,9 +58,9 @@ class PostModel{
         try{
         let filter={}
         if(data.status===1){ 
-            filter.nickname=data.status.nickname
+            filter.nickname=data.nickname
         }
-
+        console.log()
         ///const MaxPost = Number(pageSize)
         //const hidePost = (Number(page)-1)*MaxPost
         const findedMyPost = await Post.find(filter)
