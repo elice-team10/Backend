@@ -38,8 +38,8 @@ class ChatModel {
     async makeChatRoom(nick1,nick2){
         try{
             const chatData = {
-                nickname : nick1,
-                with : nick2,
+                nickname1 : nick1,
+                nickname2 : nick2,
                 chat : [],   
             }
             await Chat.create(chatData)
@@ -62,7 +62,6 @@ class ChatModel {
     async readMessage(chatRoomId,lastTimestamp){
         try{
             const sendedMessage = await Chat.find(new ObjectId(chatRoomId))
-
             
             return sendedMessage;
         }catch(err){

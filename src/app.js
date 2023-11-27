@@ -18,6 +18,9 @@ const app = express();
 
 app.use("/storage",express.static(storagePath))
 
+app.get('/api',(req,res)=>{
+  res.send("hello LAF!");
+})
 
 app.use(cors({
     origin: ['http://localhost:4000','http://kdt-sw-6-team10.elicecoding.com'],

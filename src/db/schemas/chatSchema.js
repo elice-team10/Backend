@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+/*import { Schema } from "mongoose";
 
 const ChatSchema = new Schema(
   {
@@ -45,8 +45,8 @@ const ChatRoomSchema = new Schema(
   }
 );
 
-/*export { ChatSchema };
-
+export { ChatSchema };
+*/
 
 import { Schema } from "mongoose";
 
@@ -70,11 +70,11 @@ const IndividualMessageSchema = new Schema(
 
 const ChatSchema = new Schema(
   {
-    nickname: {
+    nickname1: {
       type: String,
       required: true,
     },
-    with: {
+    nickname2: {
       type: String,
       required: true,
     },
@@ -84,6 +84,6 @@ const ChatSchema = new Schema(
     timestamps: true,
     collection: "chat",
   }
-);*/
+);
 
 export { ChatSchema };
