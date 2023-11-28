@@ -50,8 +50,8 @@ userRouter.post('/findPW',asyncHandler(async (req,res,next)=>{
 //회원정보수정
 userRouter.put('/',checkToken,duplicateCheckUser,asyncHandler(async (req,res,next)=>{
         const userData = req.user
-        const {email,nickname,password,newPassword}=req.body
-        await userModel.updateUser(userData,email,nickname,password,newPassword)
+        const {email,nickname,password,newPassword,profileImg}=req.body
+        await userModel.updateUser(userData,email,nickname,password,newPassword,profileImg)
         res.status(201).send("success")
 }))
 

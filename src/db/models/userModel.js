@@ -60,7 +60,7 @@ class UserModel{
         }
     }
 
-    async updateUser(userData,email,nickname,password,newPassword){ //회원정보 수정
+    async updateUser(userData,email,nickname,password,newPassword,profileImg){ //회원정보 수정
         
         try{
             let hashedPassword =undefined;
@@ -72,8 +72,9 @@ class UserModel{
             }           
             
             const newUser = {
-                email:email, //바꾸면 안되잖아?
-                nickname:nickname,
+                email, 
+                nickname,
+                profileImg,
                 password:hashedPassword,
             }
 
