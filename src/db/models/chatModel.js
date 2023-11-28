@@ -47,7 +47,7 @@ class ChatModel {
     async readMessage(roomId){
         try{
             const chatData = await Chat.findById(new ObjectId(roomId))
-            return chatData.content;;
+            return chatData.content;
         }catch(err){
            throw err;
         }
