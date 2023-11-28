@@ -15,11 +15,13 @@ class ChatModel {
             
             const chatData1 = {
                 userId : userId1,
-                roomId : chatRoom._id
+                roomId : chatRoom._id,
+                oppenent : userId2
             };
             const chatData2 = {
                 userId : userId2,
-                roomId : chatRoom._id
+                roomId : chatRoom._id,
+                oppenent : userId1
             }
 
             await ChatWrap.create(chatData1)
@@ -58,7 +60,7 @@ class ChatModel {
     //챗방 목록 불러오기
     async getChat(userId){
         try{
-            const wrapData = await ChatWrap.find({userId})
+            const wrapData = await ChatWrap.find({userId}).populate('roomId').populate('oppenent')
             return wrapData
         }catch(err){
             throw err;
