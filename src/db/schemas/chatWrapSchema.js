@@ -7,10 +7,15 @@ const ChatWrapSchema = new Schema(
         required: true,
       },
       roomId: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "Chat",
         required: true,
       },
-      
+      oppenent: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
     },
     {
       timestamps: true,
