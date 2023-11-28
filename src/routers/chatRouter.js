@@ -16,8 +16,8 @@ chatRouter.get('/',checkToken,asyncHandler(async (req,res,next)=>{
 chatRouter.post('/:userId',checkToken,asyncHandler(async (req,res,next)=>{
     const userId1 = req.user._id
     const userId2 = req.params.userId
-    await chatModel.makeChatRoom(userId1,userId2);
-    res.status(201).send("success")
+    const roomId=await chatModel.makeChatRoom(userId1,userId2);
+    res.status(201).json(roomId)
 }))
 
 //채팅 내역 가져오기
