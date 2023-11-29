@@ -50,7 +50,7 @@ class ChatModel {
     async getChat(userId) {
         const wrapData = await ChatWrap.find({ userId })
             .populate("roomId")
-            .populate("oppenent");
+            .populate("opponent");
         return wrapData;
     }
 
