@@ -36,6 +36,18 @@ class PostModel{
         
     }
 
+    // 회원 탈퇴 시 게시글 삭제
+    async userDeletePost(data){
+        try{
+            await Post.deleteMany({userId : data._id});
+            //await Post.deleteMany({userId : new ObjectId(data)});
+
+            return ;
+        }catch(e){
+            throw e;
+        }
+    }
+
     /* 게시글 변경
      업데이트할 게시글 내용, object화 id*/
     async updatePost(postId,data){
@@ -47,21 +59,18 @@ class PostModel{
         }catch(e){
             throw e;
         }
-        
     }
 
     /* 게시글 보기 (관리자&마이페이지)
     사용자 닉네임*/
     async findMyPost(data){
         try{
-        let filter={}
-        if(data.status===1){ 
-            filter.userId=data._id
-        }
-        ///const MaxPost = Number(pageSize)
-        //const hidePost = (Number(page)-1)*MaxPost
-        const findedMyPost = await Post.find(filter).populate('userId')
-        //.skip(hidePost).limit(MaxPost);
+            let filter={}
+            if(data.status===1){ 
+                filter.userId=data._id
+            }
+            
+            const findedMyPost = await Post.find(filter).populate('userId')
 
             return findedMyPost;
         }catch(e){
@@ -74,13 +83,12 @@ class PostModel{
     /* 게시글 보기 (id)*/
     async findPost(data){
         try{
-            const findedAllPost = await Post.findById(new ObjectId(data)).populate('userId')
+            const findedPost = await Post.findById(new ObjectId(data)).populate('userId')
 
-            return findedAllPost;
+            return findedPost;
         }catch(e){
             throw e;
         }
-        
     }
 
     /* 게시글 검색 -> 반환값이 무조건 빈배열 */
