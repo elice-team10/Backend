@@ -1,5 +1,8 @@
 import { Router } from "express";
 import { userModel } from "../db/models/userModel.js";
+import { postModel } from '../db/models/postModel.js'
+import { commentModel } from '../db/models/comment-model.js'
+
 import { checkToken } from "../middlewares/checkToken.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
 import asyncHandler from "express-async-handler"
@@ -58,6 +61,10 @@ userRouter.put('/',checkToken,duplicateCheckUser,asyncHandler(async (req,res,nex
 //유저탈퇴
 userRouter.delete('/',checkToken, asyncHandler( async (req,res,next)=>{
         const userData = req.user;
+        
+        await postModel.userDeletePost(userData);       // userData._id
+        await commentModel.userDeleteComment(userData);
+
         await userModel.delUser(userData);
         res.status(204).send("success"); 
         //.cookie("loginToken","",{httpOnly:true,maxAge:0})

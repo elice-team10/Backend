@@ -1,4 +1,8 @@
 {
+  "engines": {
+    "node": "v18.17.1",
+    "npm" : "9.6.7"
+  },
   "name": "lost_found",
   "version": "1.0.0",
   "description": "",

@@ -1,28 +1,27 @@
 import { Schema } from "mongoose";
-import {shortId} from "./shortId/shortId.js";
-
+import { shortId } from "./shortId/shortId.js";
 
 const CommentSchema = new Schema(
-  { 
-    userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+    {
+        userId: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+        },
+        content: {
+            type: String,
+            required: true,
+        },
+        postId: {
+            type: Schema.Types.ObjectId,
+            ref: "Post",
+            required: true,
+        },
     },
-    content: {
-      type: String,
-      required: true,
-    },
-    postId: {
-      type: Schema.Types.ObjectId,
-      ref: "Post",
-      required: true,
+    {
+        timestamps: true,
+        collection: "comment", // 몽고디비 컬렉션 이름 설정
     }
-  },
-  {
-    timestamps: true,
-    collection: "comment" // 몽고디비 컬렉션 이름 설정
-  }
 );
 
 export { CommentSchema };

@@ -31,9 +31,8 @@ chatRouter.get('/:roomId',asyncHandler(async (req,res,next)=>{
 chatRouter.patch('/:roomId',checkToken,asyncHandler(async (req,res,next)=>{
     const {content}=req.body
     const nickname=req.user.nickname
-    const timestamps= new Date()
     const roomId=req.params.roomId
-    await chatModel.sendMessage(roomId,content,nickname,timestamps);
+    await chatModel.sendMessage(roomId,content,nickname);
     res.status(201).send("success")
 }))
 
