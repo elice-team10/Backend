@@ -57,13 +57,13 @@ class CommentModel {
         let filter = {};
         if (data.status === 1) {
             filter.userId = data._id;
-
+        }
             const findedMyComment = await Comment.find(filter)
                 .populate("postId")
                 .populate("userId");
 
             return findedMyComment;
-        }
+        
     }
 
     /* 글에서 코멘트 보기
