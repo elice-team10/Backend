@@ -2,7 +2,7 @@ import express from "express";
 import { userRouter } from "./routers/userRouter.js";
 import { postRouter } from "./routers/postRouter.js";
 import { commentRouter } from "./routers/comment-router.js";
-//import { chatRouter } from "./routers/chatRouter.js";
+import { chatRouter } from "./routers/chatRouter.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { fileURLToPath } from "url";
