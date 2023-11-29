@@ -34,7 +34,7 @@ app.use(
 app.use(express.json());
 //app.use(cookieParser());
 
-//app.use('/api/chat',chatRouter);
+app.use('/api/chat',chatRouter);
 
 app.use("/api/user", userRouter);
 
