@@ -16,8 +16,7 @@ commentRouter.get('/',checkToken,asyncHandler(async (req, res, next) => {  //
     res.status(200).send(findedComment);
 }))
 
-
-//게시글 - 댓글 가져오기
+//게시글 - 댓글만 가져오기
 commentRouter.get('/:postId', asyncHandler(async (req, res, next) => {
 
     const findedComment
@@ -26,12 +25,28 @@ commentRouter.get('/:postId', asyncHandler(async (req, res, next) => {
     res.status(200).send(findedComment);
 }))
 
+// 대댓글만 가져오기
+commentRouter.get('/:postId/:parentId?', asyncHandler(async (req, res, next) => {
+    const data = {
+        postId: req.params.postId,
+        parentId: req.params.parentId,
+    }
+
+    const findedComment
+        = await commentModel.findCommentComment(data)
+
+    res.status(200).send(findedComment);
+}))
+
+
+
 //댓글 달기
-commentRouter.post('/:postId',checkToken,asyncHandler(async (req, res, next) => { // 
+commentRouter.post('/:postId/:parentId?',checkToken,asyncHandler(async (req, res, next) => { // 
     const newComment = {
         userId: req.user._id,
         content: req.body.content,
         postId: req.params.postId,
+        parentId : req.params.parentId
     }
 
     const createdNewComment
@@ -42,7 +57,7 @@ commentRouter.post('/:postId',checkToken,asyncHandler(async (req, res, next) => 
 
 
 //댓글 수정하기
-commentRouter.put('/:commentId/:userId',checkToken,sameUser,asyncHandler(async (req, res, next) => {//
+commentRouter.put('/:commentId/:userId?',checkToken,sameUser,asyncHandler(async (req, res, next) => {//
     const comment = {
         content: req.body.content,
         commentId: req.params.commentId,
@@ -55,7 +70,7 @@ commentRouter.put('/:commentId/:userId',checkToken,sameUser,asyncHandler(async (
 
 
 // 게시글 - 댓글 삭제하기
-commentRouter.delete('/:commentId/:userId',checkToken,sameUser,asyncHandler(async (req, res, next) => { //
+commentRouter.delete('/:commentId/:userId?',checkToken,sameUser,asyncHandler(async (req, res, next) => { //
 
     const deleted
         = await commentModel.removeComment(req.params.commentId);

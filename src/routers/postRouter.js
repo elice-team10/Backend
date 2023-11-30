@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
     }
   });
 
-const upload = multer({storage})
+const upload = multer({storage, limits: { fileSize: 3 * 1024 * 1024 },})
 
 
 //관리자&마이페이지 - 게시글 가져오기
@@ -85,7 +85,7 @@ postRouter.post('/',checkToken,upload.single('picture'),asyncHandler(async (req,
 
 
 //게시글 수정하기
-postRouter.put('/:postId/:userId',checkToken,sameUser,upload.single('picture'),asyncHandler(async (req, res, next) => { //
+postRouter.put('/:postId/:userId?',checkToken,sameUser,upload.single('picture'),asyncHandler(async (req, res, next) => { //
     let newPost = req.body
     let picture = ""
     const postId=req.params.postId
@@ -101,7 +101,7 @@ postRouter.put('/:postId/:userId',checkToken,sameUser,upload.single('picture'),a
 
 
 // 게시글 삭제하기
-postRouter.delete('/:postId/:userId',checkToken ,sameUser,asyncHandler(async (req, res, next) => { //
+postRouter.delete('/:postId/:userId?',checkToken ,sameUser,asyncHandler(async (req, res, next) => { //
 
     const deleted= await postModel.removePost(req.params.postId);
     await commentModel.removeAllComment(req.params.postId);
