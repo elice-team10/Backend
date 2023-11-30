@@ -72,19 +72,10 @@ class CommentModel{
         return findedMyComment;
     }
 
-    /* 글에서 코멘트 보기 (댓글만)
-    게시글id */
-    async findPostComment(data){
 
-            const findedPostComment = await Comment.find({ postId: data}).populate('postId').populate('userId')
-
-            return findedPostComment;
-
-    }
-
-    //대댓글만 가져오기 postId, parentId
-    async findCommentComment({postId, parentId}){
-
+    //게시글의 댓글 or 대댓글 찾기
+    async findPostComment({postId, parentId}){
+            
             const findedPostComment = await Comment.find({postId, parentId}).populate('postId').populate('userId')
             return findedPostComment;
 

@@ -16,22 +16,14 @@ commentRouter.get('/',checkToken,asyncHandler(async (req, res, next) => {  //
     res.status(200).send(findedComment);
 }))
 
-//게시글 - 댓글만 가져오기
-commentRouter.get('/:postId', asyncHandler(async (req, res, next) => {
 
-    const findedComment
-        = await commentModel.findPostComment(req.params.postId)
-
-    res.status(200).send(findedComment);
-}))
-
-// 대댓글만 가져오기
+ //게시글의 댓글 or 대댓글 찾기
 commentRouter.get('/:postId/:parentId?', asyncHandler(async (req, res, next) => {
     const data = {
         postId: req.params.postId,
         parentId: req.params.parentId,
     }
-
+    
     const findedComment
         = await commentModel.findCommentComment(data)
 
