@@ -17,6 +17,9 @@ const CommentSchema = new Schema(
             ref: "Post",
             required: true,
         },
+        parentId:{
+          type:String
+        }
     },
     {
         timestamps: true,

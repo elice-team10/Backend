@@ -16,8 +16,20 @@ commentRouter.get('/',checkToken,asyncHandler(async (req, res, next) => {  //
     res.status(200).send(findedComment);
 }))
 
+// 대댓글만 가져오기
+commentRouter.get('/:postId/:parentId', asyncHandler(async (req, res, next) => {
+    const data = {
+        postId: req.params.postId,
+        parentId: req.params.parentId,
+    }
 
-//게시글 - 댓글 가져오기
+    const findedComment
+        = await commentModel.findCommentComment(data)
+
+    res.status(200).send(findedComment);
+}))
+
+//게시글 - 댓글만 가져오기
 commentRouter.get('/:postId', asyncHandler(async (req, res, next) => {
 
     const findedComment
@@ -27,11 +39,12 @@ commentRouter.get('/:postId', asyncHandler(async (req, res, next) => {
 }))
 
 //댓글 달기
-commentRouter.post('/:postId',checkToken,asyncHandler(async (req, res, next) => { // 
+commentRouter.post('/:postId/:parentId',checkToken,asyncHandler(async (req, res, next) => { // 
     const newComment = {
         userId: req.user._id,
         content: req.body.content,
         postId: req.params.postId,
+        parentId : req.params.parentId
     }
 
     const createdNewComment
