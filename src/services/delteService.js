@@ -7,7 +7,7 @@ class DeleteService {
 
         await Post.deleteMany({userId});
         await Comment.deleteMany({userId});
-        
+
         return;
     }
 

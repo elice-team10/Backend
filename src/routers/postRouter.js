@@ -52,11 +52,7 @@ postRouter.get('/detail/:postId', asyncHandler(async (req, res, next) => {
 
 //전체 게시글 보기&검색기능
 postRouter.get('/', asyncHandler(async (req, res, next) => {  
-
-    //const {page,pageSize}=req.query;
-
-
-        
+      
     const data=req.query;
 
      const findedPost

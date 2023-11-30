@@ -65,6 +65,7 @@ class PostModel {
         product_category,
         event_date,
         event_location,
+        limit
     }) {
         let filter = {};
         if (word) {
@@ -74,8 +75,6 @@ class PostModel {
                     { content: { $regex: word, $options: "i" } },
                 ],
             };
-
-            //filter.title = word
         }
         if (board_category) {
             filter.board_category = board_category;
@@ -90,10 +89,10 @@ class PostModel {
             filter.event_location = event_location;
         }
 
-        //const MaxPost = Number(pageSize)
-        //const hidePost = (Number(page)-1)*MaxPost
+        const MaxPost = Number(limit)
+        //const hidePost = Number(page)*MaxPost
 
-        const searchResult = await Post.find(filter).populate("userId"); //.skip(hidePost).limit(MaxPost);
+        const searchResult = await Post.find(filter).populate("userId").limit(MaxPost);
 
         return searchResult;
     }

@@ -60,7 +60,7 @@ commentRouter.put('/:commentId/:userId?',checkToken,sameUser,asyncHandler(async 
 }))
 
 
-// 게시글 - 댓글 삭제하기
+// 댓글 삭제하기
 commentRouter.delete('/:commentId/:userId?',checkToken,sameUser,asyncHandler(async (req, res, next) => { //
 
     const deleted

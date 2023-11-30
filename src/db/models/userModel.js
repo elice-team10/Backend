@@ -82,7 +82,7 @@ class UserModel {
     }
 
     async delUser(id) {
-        // 유저 삭제(관리자용)
+        // 유저 삭제
 
         await User.findByIdAndDelete(new ObjectId(id));
         return;
