@@ -29,10 +29,10 @@ class ChatModel {
     }
 
     //채팅 작성
-    async sendMessage(roomId, content, nickname) {
+    async sendMessage(roomId, content, userId) {
         
         const data = {
-            nickname,
+            userId,
             content,
         };
 
@@ -43,7 +43,7 @@ class ChatModel {
     }
     //채팅 내역 불러오기
     async readMessage(roomId) {
-        const chatData = await Chat.findById(new ObjectId(roomId));
+        const chatData = await Chat.findById(new ObjectId(roomId)).populate('content.userId');
         return chatData.content;
     }
 

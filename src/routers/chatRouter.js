@@ -30,9 +30,9 @@ chatRouter.get('/:roomId',asyncHandler(async (req,res,next)=>{
 //채팅 작성
 chatRouter.patch('/:roomId',checkToken,asyncHandler(async (req,res,next)=>{
     const {content}=req.body
-    const nickname=req.user.nickname
+    const userId=req.user._id
     const roomId=req.params.roomId
-    await chatModel.sendMessage(roomId,content,nickname);
+    await chatModel.sendMessage(roomId,content,userId);
     res.status(201).send("success")
 }))
 
