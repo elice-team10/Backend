@@ -65,6 +65,7 @@ class PostModel {
         product_category,
         event_date,
         event_location,
+        page,
         limit
     }) {
         let filter = {};
@@ -90,9 +91,9 @@ class PostModel {
         }
 
         const MaxPost = Number(limit)
-        //const hidePost = Number(page)*MaxPost
+        const hidePost = Number(page)*MaxPost
 
-        const searchResult = await Post.find(filter).populate("userId").limit(MaxPost);
+        const searchResult = await Post.find(filter).populate("userId").skip(hidePost).limit(MaxPost);
 
         return searchResult;
     }
