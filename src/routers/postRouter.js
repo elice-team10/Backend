@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
     }
   });
 
-const upload = multer({storage})
+const upload = multer({storage, limits: { fileSize: 3 * 1024 * 1024 },})
 
 
 //관리자&마이페이지 - 게시글 가져오기
