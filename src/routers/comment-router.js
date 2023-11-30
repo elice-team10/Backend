@@ -4,7 +4,6 @@ import asyncHandler from 'express-async-handler'
 import { commentModel } from '../db/models/comment-model.js'
 import { checkToken } from "../middlewares/checkToken.js";
 import { sameUser } from "../middlewares/sameUser.js";
-import {isAdmin} from "../middlewares/isAdmin.js"
 
 //관리자&마이페이지 - 작성한 댓글 가져오기
 commentRouter.get('/',checkToken,asyncHandler(async (req, res, next) => {  // 
@@ -25,7 +24,7 @@ commentRouter.get('/:postId/:parentId?', asyncHandler(async (req, res, next) => 
     }
     
     const findedComment
-        = await commentModel.findCommentComment(data)
+        = await commentModel.findPostComment(data)
 
     res.status(200).send(findedComment);
 }))

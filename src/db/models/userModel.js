@@ -81,14 +81,7 @@ class UserModel {
         return;
     }
 
-    async delUser(userData) {
-        // 유저 삭제
-
-        await User.deleteOne(userData);
-        return;
-    }
-
-    async delAdminUser(id) {
+    async delUser(id) {
         // 유저 삭제(관리자용)
 
         await User.findByIdAndDelete(new ObjectId(id));

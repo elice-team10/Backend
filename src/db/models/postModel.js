@@ -1,5 +1,4 @@
 import { PostSchema } from "../schemas/postSchema.js";
-//import { errGenerator } from "../../../errGenerator.js";
 import mongoose from "mongoose";
 export const Post = mongoose.model("Post", PostSchema);
 
@@ -23,14 +22,6 @@ class PostModel {
         }
 
         return { result: "deleted" };
-    }
-
-    // 회원 탈퇴 시 게시글 삭제
-    async userDeletePost(data) {
-        await Post.deleteMany({ userId: data._id });
-        //await Post.deleteMany({userId : new ObjectId(data)});
-
-        return;
     }
 
     /* 게시글 변경

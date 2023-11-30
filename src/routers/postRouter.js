@@ -2,10 +2,10 @@ import express from "express";
 const postRouter = express.Router();
 import asyncHandler from 'express-async-handler'
 import { postModel } from '../db/models/postModel.js'
-import { commentModel } from '../db/models/comment-model.js'
+import { deleteService } from "../services/delteService.js";
+
 import { checkToken } from "../middlewares/checkToken.js";
 import { sameUser } from "../middlewares/sameUser.js";
-import {isAdmin} from "../middlewares/isAdmin.js"
 import multer from "multer";
 
 const storage = multer.diskStorage({
@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
     }
   });
 
-const upload = multer({storage, limits: { fileSize: 3 * 1024 * 1024 },})
+const upload = multer({storage})
 
 
 //관리자&마이페이지 - 게시글 가져오기
@@ -104,7 +104,7 @@ postRouter.put('/:postId/:userId?',checkToken,sameUser,upload.single('picture'),
 postRouter.delete('/:postId/:userId?',checkToken ,sameUser,asyncHandler(async (req, res, next) => { //
 
     const deleted= await postModel.removePost(req.params.postId);
-    await commentModel.removeAllComment(req.params.postId);
+    await deleteService.removeAllComment(req.params.postId);
 
     res.status(200).json(deleted);
 }))

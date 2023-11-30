@@ -30,13 +30,7 @@ class CommentModel{
         return { result: "deleted" };
     }
 
-    /*게시글 삭제 시 
-    포스트 id*/
-    async removeAllComment(data){
-
-            await Comment.deleteMany({postId : new ObjectId(data)});
-
-    }
+    
 
     /* 코멘트 수정
     코멘트 id, 업데이트할 내용(콘텐트)*/
@@ -45,18 +39,7 @@ class CommentModel{
             = await Comment.findByIdAndUpdate(new ObjectId(commentId),{content})
             return updatedComment;
     }
-
-    // 회원 탈퇴 시 코멘트 삭제
-    async userDeleteComment(data){
-
-            const deletedComment
-             = await Comment.deleteMany({userId : data._id});
-            //await Comment.deleteMany({userId : new ObjectId(data)});
-
-
-            return ;
-
-    }
+    
 
     /* 코멘트 보기 (관리자&마이페이지)
     사용자 닉네임*/

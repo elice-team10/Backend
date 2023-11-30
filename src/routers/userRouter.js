@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { userModel } from "../db/models/userModel.js";
-import { postModel } from '../db/models/postModel.js'
-import { commentModel } from '../db/models/comment-model.js'
-
 import { checkToken } from "../middlewares/checkToken.js";
+import { deleteService } from "../services/delteService.js";
+
+
 import { isAdmin } from "../middlewares/isAdmin.js";
 import asyncHandler from "express-async-handler"
 import { checkLogin } from "../middlewares/checkLogin.js";
@@ -60,12 +60,11 @@ userRouter.put('/',checkToken,duplicateCheckUser,asyncHandler(async (req,res,nex
 
 //유저탈퇴
 userRouter.delete('/',checkToken, asyncHandler( async (req,res,next)=>{
-        const userData = req.user;
+        const userId = req.user._id;
         
-        await postModel.userDeletePost(userData);       // userData._id
-        await commentModel.userDeleteComment(userData);
+        await deleteService.userDelete(userId);       
 
-        await userModel.delUser(userData);
+        await userModel.delUser(userId);
         res.status(204).send("success"); 
         //.cookie("loginToken","",{httpOnly:true,maxAge:0})
 }))
@@ -74,7 +73,10 @@ userRouter.delete('/',checkToken, asyncHandler( async (req,res,next)=>{
 //회원강제탈퇴(관리자용)
 userRouter.delete('/:userId',checkToken,isAdmin,asyncHandler(async (req,res,next)=>{
         const userId = req.params.userId;
-        await userModel.delAdminUser(userId);
+
+        await deleteService.userDelete(userId);       
+
+        await userModel.delUser(userId);
         res.status(204).send("success");
 }))
 
