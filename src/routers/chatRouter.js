@@ -2,6 +2,7 @@ import { Router } from "express";
 import asyncHandler from "express-async-handler"
 import { chatModel } from "../db/models/chatModel.js";
 import { checkToken } from "../middlewares/checkToken.js";
+import { duplicateChatRoom } from "../middlewares/duplicateChatRoom.js";
 
 const chatRouter = Router();
 
@@ -13,7 +14,7 @@ chatRouter.get('/',checkToken,asyncHandler(async (req,res,next)=>{
 }))
 
 //챗방만들기
-chatRouter.post('/:userId',checkToken,asyncHandler(async (req,res,next)=>{
+chatRouter.post('/:userId',checkToken,duplicateChatRoom,asyncHandler(async (req,res,next)=>{
     const userId1 = req.user._id
     const userId2 = req.params.userId
     const roomId=await chatModel.makeChatRoom(userId1,userId2);
